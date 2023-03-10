@@ -13,30 +13,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MarkerIcon {
-  static Future<BitmapDescriptor> svgAsset({
-    required String assetName,
-    required BuildContext context,
-    required double size,
-  }) async {
-    final mediaQuery = MediaQuery.of(context);
-    // Read SVG file as String
-    String svgString = await DefaultAssetBundle.of(context).loadString(assetName);
-    // Create DrawableRoot from SVG String
-    final PictureInfo pictureInfo = await vg.loadPicture(SvgStringLoader(svgString), null);
-
-    // toPicture() and toImage() don't seem to be pixel ratio aware, so we calculate the actual sizes here
-    double devicePixelRatio = mediaQuery.devicePixelRatio;
-    double width = size * devicePixelRatio; // where 32 is your SVG's original width
-    double height = size * devicePixelRatio; // same thing
-    // Convert to ui.Picture
-    // Convert to ui.Image. toImage() takes width and height as parameters
-    // you need to find the best size to suit your needs and take into account the
-    // screen DPI
-    ui.Image image = await pictureInfo.picture.toImage(width.toInt(), height.toInt());
-    ByteData? bytes = await image.toByteData(format: ui.ImageByteFormat.png);
-    return BitmapDescriptor.fromBytes(bytes!.buffer.asUint8List());
-  }
-
   static Future<BitmapDescriptor> pictureAsset({
     required String assetPath,
     required double width,
@@ -57,12 +33,7 @@ class MarkerIcon {
   }
 
   static Future<BitmapDescriptor> pictureAssetWithCenterText(
-      {required String assetPath,
-      required String text,
-      required Size size,
-      double fontSize = 15,
-      Color fontColor = Colors.black,
-      FontWeight fontWeight = FontWeight.w500}) async {
+      {required String assetPath, required String text, required Size size, double fontSize = 15, Color fontColor = Colors.black, FontWeight fontWeight = FontWeight.w500}) async {
     ByteData imageFile = await rootBundle.load(assetPath);
     final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
     final Canvas canvas = Canvas(pictureRecorder);
@@ -88,12 +59,7 @@ class MarkerIcon {
     final ui.Codec codec = await ui.instantiateImageCodec(imageUint8List);
     final ui.FrameInfo imageFI = await codec.getNextFrame();
 
-    paintImage(
-        fit: BoxFit.contain,
-        alignment: Alignment.center,
-        canvas: canvas,
-        rect: Rect.fromLTWH(0, 0, size.width.toDouble(), size.height.toDouble()),
-        image: imageFI.image);
+    paintImage(fit: BoxFit.contain, alignment: Alignment.center, canvas: canvas, rect: Rect.fromLTWH(0, 0, size.width.toDouble(), size.height.toDouble()), image: imageFI.image);
     painter.layout();
     painter.paint(canvas, Offset((size.width * 0.5) - painter.width * 0.5, (size.height * .5) - painter.height * 0.5));
 
@@ -147,8 +113,7 @@ class MarkerIcon {
     final Uint8List imageUint8List = await imageFile.readAsBytes();
     final ui.Codec codec = await ui.instantiateImageCodec(imageUint8List);
     final ui.FrameInfo imageFI = await codec.getNextFrame();
-    paintImage(
-        canvas: canvas, rect: Rect.fromLTWH(0, 0, imageSize.toDouble(), imageSize.toDouble()), image: imageFI.image);
+    paintImage(canvas: canvas, rect: Rect.fromLTWH(0, 0, imageSize.toDouble(), imageSize.toDouble()), image: imageFI.image);
     final _image = await pictureRecorder.endRecording().toImage(imageSize, (imageSize * 1.1).toInt());
     final data = await _image.toByteData(format: ui.ImageByteFormat.png);
     return BitmapDescriptor.fromBytes(data!.buffer.asUint8List());
@@ -171,8 +136,7 @@ class MarkerIcon {
 
     //make canvas clip path to prevent image drawing over the circle
     final Path clipPath = Path();
-    clipPath
-        .addRRect(RRect.fromRectAndRadius(Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()), Radius.circular(100)));
+    clipPath.addRRect(RRect.fromRectAndRadius(Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()), Radius.circular(100)));
     /* clipPath.addRRect(RRect.fromRectAndRadius(
         Rect.fromLTWH(0, size * 8 / 10, size.toDouble(), size * 3 / 10),
         Radius.circular(100))); */
@@ -182,12 +146,7 @@ class MarkerIcon {
     final Uint8List imageUint8List = await imageFile.readAsBytes();
     final ui.Codec codec = await ui.instantiateImageCodec(imageUint8List);
     final ui.FrameInfo imageFI = await codec.getNextFrame();
-    paintImage(
-        fit: BoxFit.cover,
-        alignment: Alignment.center,
-        canvas: canvas,
-        rect: Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()),
-        image: imageFI.image);
+    paintImage(fit: BoxFit.cover, alignment: Alignment.center, canvas: canvas, rect: Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()), image: imageFI.image);
 
     if (addBorder) {
       //draw Border

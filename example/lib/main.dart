@@ -35,29 +35,16 @@ class _HomePageState extends State<HomePage> {
         onPressed: () async {
           _markers.add(
             Marker(
-              markerId: MarkerId('svgAsset'),
-              icon: await MarkerIcon.svgAsset(assetName: 'example/lib/asset/car.svg', context: context, size: 50),
-              position: LatLng(35.8400, 50.9391),
-            ),
-          );
-
-          _markers.add(
-            Marker(
               markerId: MarkerId('downloadResizePicture'),
-              icon: await MarkerIcon.downloadResizePicture(
-                  url: 'https://thegpscoordinates.net/photos/la/tehran_iran_5u679ezi8f.jpg', imageSize: 150),
+              icon: await MarkerIcon.downloadResizePicture(url: 'https://thegpscoordinates.net/photos/la/tehran_iran_5u679ezi8f.jpg', imageSize: 150),
               position: LatLng(35.6892, 51.3890),
             ),
           );
           _markers.add(
             Marker(
               markerId: MarkerId('downloadResizePictureCircle'),
-              icon: await MarkerIcon.downloadResizePictureCircle(
-                  'https://thegpscoordinates.net/photos/la/tehran_iran_5u679ezi8f.jpg',
-                  size: 150,
-                  addBorder: true,
-                  borderColor: Colors.white,
-                  borderSize: 15),
+              icon: await MarkerIcon.downloadResizePictureCircle('https://thegpscoordinates.net/photos/la/tehran_iran_5u679ezi8f.jpg',
+                  size: 150, addBorder: true, borderColor: Colors.white, borderSize: 15),
               position: LatLng(34.6416, 50.8746),
             ),
           );
